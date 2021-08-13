@@ -11,7 +11,21 @@ Packages used:
 
 '''
 
-# def main():
+
+import functions
+import matplotlib.pyplot as plt
+
+
+img_dir = "Test_image.jpg"
+
+def main():
+    img = functions.importImage(img_dir)
+    img = functions.convertToArray(img)
+    print(functions.getImageShape(img))
+
+    img = functions.convertToGrayscale(img)
+    print(functions.getImageShape(img))
+    functions.displayImage(img)
 
 
 if __name__ == '__main__':
