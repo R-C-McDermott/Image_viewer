@@ -5,27 +5,33 @@ Written using Python 3.6.1
 
 Packages used:
 - NumPy
-- Scikit-Image
 - Pillow
-- Open-CV
+- matplotlib
 
 '''
 
-
-import functions
+import imagePropertyFunctions as ipf
+import imageFilterFunctions as iff
 import matplotlib.pyplot as plt
 
 
 img_dir = "Test_image.jpg"
 
 def main():
-    img = functions.importImage(img_dir)
-    img = functions.convertToArray(img)
-    print(functions.getImageShape(img))
 
-    img = functions.convertToGrayscale(img)
-    print(functions.getImageShape(img))
-    functions.displayImage(img)
+    # CURRENTLY TESTING FUNCTIONS
+
+    # img = ipf.importImage(img_dir)
+    # img = functions.convertToArray(img)
+
+    # print(ipf.getImageShape(img))
+
+    # img = iff.convertToGrayscale(img)
+    # img = iff.gaussianFilter(img, 4)
+    # img = iff.boxBlurFilter(img, 8)
+    # img = iff.kernelFilter(img, 5)
+
+    # ipf.displayImagePopUp(img)
 
 
 if __name__ == '__main__':
