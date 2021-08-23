@@ -10,8 +10,7 @@ Packages used:
 
 '''
 
-import imagePropertyFunctions as ipf
-import imageFilterFunctions as iff
+
 import matplotlib.pyplot as plt
 import imageClass as im
 
