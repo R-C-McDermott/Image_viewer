@@ -13,6 +13,7 @@ Packages used:
 import imagePropertyFunctions as ipf
 import imageFilterFunctions as iff
 import matplotlib.pyplot as plt
+import imageClass as im
 
 
 img_dir = "Test_image.jpg"
@@ -20,7 +21,17 @@ img_dir = "Test_image.jpg"
 def main():
 
     # CURRENTLY TESTING FUNCTIONS
+    img = im.ImageClass(img_dir)
+    print(img.img_X_dim)
+    print(img.img_Y_dim)
 
+    # img.boxBlurFilter(20)
+    img.gaussianFilter(5)
+    img.kernelFilter(5, scale=30)
+    img.displayOriginalImagePopUp()
+    img.displayAlteredImagePopUp()
+
+    img.listImageEffects()
     # img = ipf.importImage(img_dir)
     # img = functions.convertToArray(img)
 
