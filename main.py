@@ -29,7 +29,8 @@ def main():
     img.kernelFilter(5, scale=30)
     img.displayOriginalImagePopUp()
     img.displayAlteredImagePopUp()
-
+    img.croppedArray(200, 740, 200, 550)
+    img.displayCroppedImagePopUp()
     img.listImageEffects()
     # img = ipf.importImage(img_dir)
     # img = functions.convertToArray(img)

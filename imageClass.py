@@ -17,8 +17,10 @@ class ImageClass:
         self.img_X_dim = self.img_arr.shape[1]
         self.img_Y_dim = self.img_arr.shape[0]
         self.filtered_img = None
+        self.cropped_img = None
         self.effects = []
 
+# BASIC IMAGE CLASS OPERATIONS
 
     def displayOriginalImagePopUp(self):
         plt.imshow(self.img)
@@ -28,7 +30,37 @@ class ImageClass:
         plt.imshow(self.filtered_img)
         plt.show()
 
-    # Image filters
+    def displayCroppedImagePopUp(self):
+        plt.imshow(self.cropped_img)
+        plt.show()
+
+    def listImageEffects(self):
+        if self.filtered_img == None:
+            print("No image effects currently")
+        else:
+            print("Current image effects present:")
+            [print(effect) for effect in self.effects]
+
+    def removeEffects(self):
+        self.filtered_img = None
+        self.effects = []
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+# IMAGE ALTERING FUNCTIONS
+
+    def croppedArray(self, left, right, top, bottom):
+        self.cropped_img = self.img_arr[top:bottom, left:right]
+
+    
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+
+# IMAGE FILTERING FUNCTIONS
+
     def gaussianFilter(self, radius):
         if self.filtered_img == None:
             self.filtered_img = self.img.filter(ImageFilter.GaussianBlur(radius=radius))
@@ -79,22 +111,17 @@ class ImageClass:
                 self.filtered_img = self.filtered_img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
-        # Colour palette functions
+# COLOUR CONVERTION FUNCTIONS
+
     def convertToGrayscale(self):
         if self.filtered_img == None:
             self.filtered_img = self.img.convert("LA")
         else:
             self.filtered_img = self.filtered_img.convert("LA")
 
-    def listImageEffects(self):
-        if self.filtered_img == None:
-            print("No image effects currently")
-        else:
-            print("Current image effects present:")
-            [print(effect) for effect in self.effects]
 
-    def removeEffects(self):
-        self.filtered_img = None
-        self.effects = []
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
