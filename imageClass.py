@@ -6,14 +6,17 @@ import numpy as np
 
 from PIL import Image
 from PIL import ImageFilter
+from PyQt5.QtGui import QImage
 
 import matplotlib.pyplot as plt
 
 
 class ImageClass:
     def __init__(self, img_dir):
-        self.img = Image.open(img_dir)
-        self.img_arr = np.array(self.img)
+        self.img_read = Image.open(img_dir)
+        self.img = QImage(img_dir)
+        # self.img_dir = img_dir
+        self.img_arr = np.array(self.img_read)
         self.img_X_dim = self.img_arr.shape[1]
         self.img_Y_dim = self.img_arr.shape[0]
         self.filtered_img = None
@@ -23,7 +26,7 @@ class ImageClass:
 # BASIC IMAGE CLASS OPERATIONS
 
     def displayOriginalImagePopUp(self):
-        plt.imshow(self.img)
+        plt.imshow(self.img_read)
         plt.show()
 
     def displayAlteredImagePopUp(self):
@@ -45,6 +48,7 @@ class ImageClass:
         self.filtered_img = None
         self.effects = []
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -53,7 +57,7 @@ class ImageClass:
     def croppedArray(self, left, right, top, bottom):
         self.cropped_img = self.img_arr[top:bottom, left:right]
 
-    
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
@@ -63,7 +67,7 @@ class ImageClass:
 
     def gaussianFilter(self, radius):
         if self.filtered_img == None:
-            self.filtered_img = self.img.filter(ImageFilter.GaussianBlur(radius=radius))
+            self.filtered_img = self.img_read.filter(ImageFilter.GaussianBlur(radius=radius))
             self.effects.append(f"Gaussian Filter with radius {radius}")
         else:
             self.filtered_img = self.filtered_img.filter(ImageFilter.GaussianBlur(radius=radius))
@@ -71,7 +75,7 @@ class ImageClass:
 
     def boxBlurFilter(self, radius):
         if self.filtered_img == None:
-            self.filtered_img = self.img.filter(ImageFilter.BoxBlur(radius=radius))
+            self.filtered_img = self.img_read.filter(ImageFilter.BoxBlur(radius=radius))
             self.effects.append(f"Box Blur Filter with radius {radius}")
         else:
             self.filtered_img = self.filtered_img.filter(ImageFilter.BoxBlur(radius=radius))
@@ -95,11 +99,11 @@ class ImageClass:
 
         if self.filtered_img == None:
             if dimension == 3:
-                self.filtered_img = self.img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
+                self.filtered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
             if dimension == 5:
-                self.filtered_img = self.img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
+                self.filtered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
         else:
@@ -118,7 +122,7 @@ class ImageClass:
 
     def convertToGrayscale(self):
         if self.filtered_img == None:
-            self.filtered_img = self.img.convert("LA")
+            self.filtered_img = self.img_read.convert("LA")
         else:
             self.filtered_img = self.filtered_img.convert("LA")
 

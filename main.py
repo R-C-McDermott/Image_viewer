@@ -1,18 +1,19 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'ImageEditorGUI.ui'
+# RCM Image editor by Ryan C. McDermott
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# GUI built using the PyQt5 library in Python
 #
-# WARNING! All changes made in this file will be lost!
+# Imports image editing functions and image class from ImageClass.py
+#
+# GitHub: https://github.com/R-C-McDermott/Image_editor.git
 
-
+# Library imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QImage
 import imageClass as IC
+import os
 
-
+# GUI Class
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -44,6 +45,7 @@ class Ui_MainWindow(object):
         self.checkBox = QtWidgets.QCheckBox(self.filterBox)
         self.checkBox.setGeometry(QtCore.QRect(10, 20, 81, 20))
         self.checkBox.setObjectName("checkBox")
+        self.checkBox.clicked.connect(self.filterIm)
         # Box blur
         self.checkBox_2 = QtWidgets.QCheckBox(self.filterBox)
         self.checkBox_2.setGeometry(QtCore.QRect(10, 40, 81, 20))
@@ -131,14 +133,21 @@ class Ui_MainWindow(object):
                 "hello", "Images (*.png *.xpm *.jpg)")
         # If user presses cancel, the function will pass and the image object will not be created
         if image_file != "":
+            global image_object
             image_object = IC.ImageClass(image_file) # Creation of image object - can apply functions from imageClass.py to object
 
             # Two lines below used to update the QLabel object in the GUI
-            self.imageCanvas.setPixmap(QtGui.QPixmap(image_object.img_dir))
+            # self.imageCanvas.setPixmap(QtGui.QPixmap(image_object.img))
+            self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(image_object.img))
             self.imageCanvas.setScaledContents(True)
         else:
             pass
 
+    def filterIm(self):
+        image_object.gaussianFilter(5)
+        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/GAUSSIAN.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/GAUSSIAN.jpg")))
+        self.imageCanvas.setScaledContents(True)
 
     def fileExit(self):
         pass
