@@ -65,69 +65,59 @@
     <property name="title">
      <string>Filter</string>
     </property>
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QPushButton" name="gaussian">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>81</width>
-       <height>20</height>
+       <width>93</width>
+       <height>28</height>
       </rect>
      </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
      <property name="text">
-      <string>check1</string>
+      <string>Gaussian Filter</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_2">
+    <widget class="QPushButton" name="boxBlur">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
-       <width>81</width>
-       <height>20</height>
+       <y>50</y>
+       <width>93</width>
+       <height>28</height>
       </rect>
      </property>
      <property name="text">
-      <string>check2</string>
+      <string>Box Blur</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>81</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>check3</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBox_4">
+    <widget class="QPushButton" name="kernelFilt">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>80</y>
-       <width>81</width>
-       <height>20</height>
+       <width>93</width>
+       <height>28</height>
       </rect>
      </property>
      <property name="text">
-      <string>check4</string>
+      <string>Kernel Filter</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_5">
+    <widget class="QPushButton" name="pushButton_4">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
-       <width>81</width>
-       <height>20</height>
+       <y>110</y>
+       <width>93</width>
+       <height>28</height>
       </rect>
      </property>
      <property name="text">
-      <string>check5</string>
+      <string>PushButton</string>
      </property>
     </widget>
    </widget>

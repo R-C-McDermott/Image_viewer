@@ -42,26 +42,27 @@ class Ui_MainWindow(object):
         self.filterBox.setObjectName("filterBox")
         # Check boxes for filters (may change)
         # Gaussian filter
-        self.checkBox = QtWidgets.QCheckBox(self.filterBox)
-        self.checkBox.setGeometry(QtCore.QRect(10, 20, 81, 20))
-        self.checkBox.setObjectName("checkBox")
-        self.checkBox.clicked.connect(self.filterIm)
+        self.gaussian = QtWidgets.QPushButton(self.filterBox)
+        self.gaussian.setGeometry(QtCore.QRect(10, 20, 93, 28))
+        self.gaussian.setObjectName("gaussian")
+        self.gaussian.clicked.connect(self.filterGaussian)
         # Box blur
-        self.checkBox_2 = QtWidgets.QCheckBox(self.filterBox)
-        self.checkBox_2.setGeometry(QtCore.QRect(10, 40, 81, 20))
-        self.checkBox_2.setObjectName("checkBox_2")
+        self.boxBlur = QtWidgets.QPushButton(self.filterBox)
+        self.boxBlur.setGeometry(QtCore.QRect(10, 50, 93, 28))
+        self.boxBlur.setObjectName("boxBlur")
+        self.boxBlur.clicked.connect(self.filterBoxBlur)
         # Kernel filter
-        self.checkBox_3 = QtWidgets.QCheckBox(self.filterBox)
-        self.checkBox_3.setGeometry(QtCore.QRect(10, 60, 81, 20))
-        self.checkBox_3.setObjectName("checkBox_3")
+        self.kernelFilt = QtWidgets.QPushButton(self.filterBox)
+        self.kernelFilt.setGeometry(QtCore.QRect(10, 80, 93, 28))
+        self.kernelFilt.setObjectName("kernelFilt")
+        self.kernelFilt.clicked.connect(self.filterKernel)
         # ???
-        self.checkBox_4 = QtWidgets.QCheckBox(self.filterBox)
-        self.checkBox_4.setGeometry(QtCore.QRect(10, 80, 81, 20))
-        self.checkBox_4.setObjectName("checkBox_4")
-        # ???
-        self.checkBox_5 = QtWidgets.QCheckBox(self.filterBox)
-        self.checkBox_5.setGeometry(QtCore.QRect(10, 100, 81, 20))
-        self.checkBox_5.setObjectName("checkBox_5")
+        self.removeFilters = QtWidgets.QPushButton(self.filterBox)
+        self.removeFilters.setGeometry(QtCore.QRect(10, 110, 93, 28))
+        self.removeFilters.setObjectName("removeFilters")
+        self.removeFilters.clicked.connect(self.revertOriginal)
+
+
 
         # Drawing tools group box (probably change to colour palette changing tools)
         self.drawBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -71,7 +72,6 @@ class Ui_MainWindow(object):
         # Label Widget for image canvas
         self.imageCanvas = QtWidgets.QLabel(self.centralwidget)
         self.imageCanvas.setGeometry(QtCore.QRect(130, 10, 861, 611))
-        self.imageCanvas.setPixmap(QtGui.QPixmap("Test_image.jpg"))
         self.imageCanvas.setScaledContents(True)
         self.imageCanvas.setObjectName("imageCanvas")
 
@@ -116,11 +116,10 @@ class Ui_MainWindow(object):
         self.cropButton.setText(_translate("MainWindow", "Crop"))
         self.label.setText(_translate("MainWindow", "Position:"))
         self.filterBox.setTitle(_translate("MainWindow", "Filter"))
-        self.checkBox.setText(_translate("MainWindow", "check1"))
-        self.checkBox_2.setText(_translate("MainWindow", "check2"))
-        self.checkBox_3.setText(_translate("MainWindow", "check3"))
-        self.checkBox_4.setText(_translate("MainWindow", "check4"))
-        self.checkBox_5.setText(_translate("MainWindow", "check5"))
+        self.gaussian.setText(_translate("MainWindow", "Gaussian Filter"))
+        self.boxBlur.setText(_translate("MainWindow", "Box Blur"))
+        self.kernelFilt.setText(_translate("MainWindow", "Kernel Filter"))
+        self.removeFilters.setText(_translate("MainWindow", "Remove Filters"))
         self.drawBox.setTitle(_translate("MainWindow", "Draw"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
@@ -135,18 +134,34 @@ class Ui_MainWindow(object):
         if image_file != "":
             global image_object
             image_object = IC.ImageClass(image_file) # Creation of image object - can apply functions from imageClass.py to object
-
+            image_object.img_read.save(os.path.dirname(__file__)+"temp/ORIGINAL.jpg")
             # Two lines below used to update the QLabel object in the GUI
-            # self.imageCanvas.setPixmap(QtGui.QPixmap(image_object.img))
             self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(image_object.img))
             self.imageCanvas.setScaledContents(True)
         else:
             pass
 
-    def filterIm(self):
+    def filterGaussian(self):
         image_object.gaussianFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/GAUSSIAN.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/GAUSSIAN.jpg")))
+        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        self.imageCanvas.setScaledContents(True)
+
+    def filterBoxBlur(self):
+        image_object.boxBlurFilter(5)
+        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        self.imageCanvas.setScaledContents(True)
+
+    def filterKernel(self):
+        image_object.kernelFilter(5)
+        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        self.imageCanvas.setScaledContents(True)
+
+    def revertOriginal(self):
+        image_object.filtered_img = None
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/ORIGINAL.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def fileExit(self):
