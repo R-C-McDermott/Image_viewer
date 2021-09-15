@@ -13,6 +13,7 @@ from PyQt5.QtGui import QImage
 import imageClass as IC
 import os
 
+
 # GUI Class
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -62,8 +63,6 @@ class Ui_MainWindow(object):
         self.removeFilters.setObjectName("removeFilters")
         self.removeFilters.clicked.connect(self.revertOriginal)
 
-
-
         # Drawing tools group box (probably change to colour palette changing tools)
         self.drawBox = QtWidgets.QGroupBox(self.centralwidget)
         self.drawBox.setGeometry(QtCore.QRect(10, 400, 111, 80))
@@ -105,7 +104,6 @@ class Ui_MainWindow(object):
         self.actionExit.setObjectName("actionExit")
         self.menuFile.addAction(self.actionExit)
 
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -129,12 +127,13 @@ class Ui_MainWindow(object):
 
     def openImage(self):
         image_file, _ = QFileDialog.getOpenFileName(self.imageCanvas, "Image Selector",
-                "hello", "Images (*.png *.xpm *.jpg)")
+                                                    "hello", "Images (*.png *.xpm *.jpg)")
         # If user presses cancel, the function will pass and the image object will not be created
         if image_file != "":
             global image_object
-            image_object = IC.ImageClass(image_file) # Creation of image object - can apply functions from imageClass.py to object
-            image_object.img_read.save(os.path.dirname(__file__)+"temp/ORIGINAL.jpg")
+            # Creation of image object - can apply functions from imageClass.py to object
+            image_object = IC.ImageClass(image_file)
+            image_object.img_read.save(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")
             # Two lines below used to update the QLabel object in the GUI
             self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(image_object.img))
             self.imageCanvas.setScaledContents(True)
@@ -143,25 +142,25 @@ class Ui_MainWindow(object):
 
     def filterGaussian(self):
         image_object.gaussianFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterBoxBlur(self):
         image_object.boxBlurFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterKernel(self):
         image_object.kernelFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__)+"temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/FILTERED.jpg")))
+        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def revertOriginal(self):
         image_object.filtered_img = None
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__)+"temp/ORIGINAL.jpg")))
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def fileExit(self):
@@ -170,6 +169,7 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
