@@ -99,11 +99,12 @@ class Ui_MainWindow(object):
         # Save image option attached to saveAsImage function
         self.actionSave_As = QtWidgets.QAction(MainWindow)
         self.actionSave_As.setObjectName("actionSave_As")
-        self.actionSave_As.triggered.connect(self.imageSave)
+        self.actionSave_As.triggered.connect(self.imageSaveAs)
         self.menuFile.addAction(self.actionSave_As)
         # Save image option attached to saveImage function
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
+        self.actionSave.triggered.connect(self.imageSave)
         self.menuFile.addAction(self.actionSave)
         # Exit option attached to fileExit function
         self.actionExit = QtWidgets.QAction(MainWindow)
@@ -135,7 +136,7 @@ class Ui_MainWindow(object):
 
     def openImage(self):
         image_file, _ = QFileDialog.getOpenFileName(self.imageCanvas, "Image Selector",
-                                                    "hello", "Images (*.png *.xpm *.jpg)")
+                                                    "", "Images (*.png *.xpm *.jpg)")
         # If user presses cancel, the function will pass and the image object will not be created
         if image_file != "":
             global image_object
@@ -143,40 +144,48 @@ class Ui_MainWindow(object):
             image_object = IC.ImageClass(image_file)
             image_object.img_read.save(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")
             # Two lines below used to update the QLabel object in the GUI
-            self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(image_object.img))
+            self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(image_object.img_directory)))
+            # self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(image_object.img))
+
             self.imageCanvas.setScaledContents(True)
         else:
             pass
 
+    def imageSaveAs(self):
+        save_name, _ = QFileDialog.getSaveFileName(self.imageCanvas, 'Save File',
+                                           "", "Images (*.png *.xpm *.jpg)")
+        image_object.img_directory = save_name
+        if image_object.altered_img is None:
+            image_object.img_read.save(save_name)
+        else:
+            image_object.altered_img.save(save_name)
+
     def imageSave(self):
-        pass
-        # name = QFileDialog.getSaveFileName(self, 'Save File')
-        # print(name)
-        # file = open(name, 'w')
-        # text = self.textEdit.toPlainText()
-        # file.write(text)
-        # file.close()
+        if image_object.altered_img is None:
+            image_object.img_read.save(image_object.img_directory)
+        else:
+            image_object.altered_img.save(image_object.img_directory)
 
     def filterGaussian(self):
         image_object.gaussianFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterBoxBlur(self):
         image_object.boxBlurFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterKernel(self):
         image_object.kernelFilter(5)
-        image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def revertOriginal(self):
-        image_object.filtered_img = None
+        image_object.altered_img = None
         image_object.effects = []
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")))
         self.imageCanvas.setScaledContents(True)

@@ -13,13 +13,13 @@ import matplotlib.pyplot as plt
 
 class ImageClass:
     def __init__(self, img_dir):
+        self.img_directory = img_dir
         self.img_read = Image.open(img_dir)
-        self.img = QImage(img_dir)
-        # self.img_dir = img_dir
+        # self.img = QImage(img_dir)
         self.img_arr = np.array(self.img_read)
         self.img_X_dim = self.img_arr.shape[1]
         self.img_Y_dim = self.img_arr.shape[0]
-        self.filtered_img = None
+        self.altered_img = None
         self.cropped_img = None
         self.effects = []
 
@@ -30,7 +30,7 @@ class ImageClass:
         plt.show()
 
     def displayAlteredImagePopUp(self):
-        plt.imshow(self.filtered_img)
+        plt.imshow(self.altered_img)
         plt.show()
 
     def displayCroppedImagePopUp(self):
@@ -38,14 +38,14 @@ class ImageClass:
         plt.show()
 
     def listImageEffects(self):
-        if self.filtered_img == None:
+        if self.altered_img == None:
             print("No image effects currently")
         else:
             print("Current image effects present:")
             [print(effect) for effect in self.effects]
 
     def removeEffects(self):
-        self.filtered_img = None
+        self.altered_img = None
         self.effects = []
 
 
@@ -66,19 +66,19 @@ class ImageClass:
 # IMAGE FILTERING FUNCTIONS
 
     def gaussianFilter(self, radius):
-        if self.filtered_img == None:
-            self.filtered_img = self.img_read.filter(ImageFilter.GaussianBlur(radius=radius))
+        if self.altered_img == None:
+            self.altered_img = self.img_read.filter(ImageFilter.GaussianBlur(radius=radius))
             self.effects.append(f"Gaussian Filter with radius {radius}")
         else:
-            self.filtered_img = self.filtered_img.filter(ImageFilter.GaussianBlur(radius=radius))
+            self.altered_img = self.altered_img.filter(ImageFilter.GaussianBlur(radius=radius))
             self.effects.append(f"Gaussian Filter with radius {radius}")
 
     def boxBlurFilter(self, radius):
-        if self.filtered_img == None:
-            self.filtered_img = self.img_read.filter(ImageFilter.BoxBlur(radius=radius))
+        if self.altered_img == None:
+            self.altered_img = self.img_read.filter(ImageFilter.BoxBlur(radius=radius))
             self.effects.append(f"Box Blur Filter with radius {radius}")
         else:
-            self.filtered_img = self.filtered_img.filter(ImageFilter.BoxBlur(radius=radius))
+            self.altered_img = self.altered_img.filter(ImageFilter.BoxBlur(radius=radius))
             self.effects.append(f"Box Blur Filter with radius {radius}")
 
     def kernelFilter(self, dimension, scale=None):
@@ -97,22 +97,22 @@ class ImageClass:
             1,2,4,2,1,
         )
 
-        if self.filtered_img == None:
+        if self.altered_img == None:
             if dimension == 3:
-                self.filtered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
+                self.altered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
             if dimension == 5:
-                self.filtered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
+                self.altered_img = self.img_read.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
         else:
             if dimension == 3:
-                self.filtered_img = self.filtered_img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
+                self.altered_img = self.altered_img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_3x3, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
             if dimension == 5:
-                self.filtered_img = self.filtered_img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
+                self.altered_img = self.altered_img.filter(ImageFilter.Kernel(size=(dimension, dimension), kernel=kernel_weights_5x5, scale=scale))
                 self.effects.append(f"{dimension}X{dimension} Kernel filter with scale of {scale}")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -121,10 +121,10 @@ class ImageClass:
 # COLOUR CONVERTION FUNCTIONS
 
     def convertToGrayscale(self):
-        if self.filtered_img == None:
-            self.filtered_img = self.img_read.convert("LA")
+        if self.altered_img == None:
+            self.altered_img = self.img_read.convert("LA")
         else:
-            self.filtered_img = self.filtered_img.convert("LA")
+            self.altered_img = self.altered_img.convert("LA")
 
 
 
