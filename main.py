@@ -57,11 +57,16 @@ class Ui_MainWindow(object):
         self.kernelFilt.setGeometry(QtCore.QRect(10, 80, 93, 28))
         self.kernelFilt.setObjectName("kernelFilt")
         self.kernelFilt.clicked.connect(self.filterKernel)
-        # ???
+        # Remove filters
         self.removeFilters = QtWidgets.QPushButton(self.filterBox)
         self.removeFilters.setGeometry(QtCore.QRect(10, 110, 93, 28))
         self.removeFilters.setObjectName("removeFilters")
         self.removeFilters.clicked.connect(self.revertOriginal)
+        # Undo filter - UNUSED
+        # self.undoFilterButton = QtWidgets.QPushButton(self.filterBox)
+        # self.undoFilterButton.setGeometry(QtCore.QRect(10, 140, 93, 28))
+        # self.undoFilterButton.setObjectName("undoFilterButton")
+        # self.undoFilterButton.clicked.connect(self.undoFilter)
 
         # Drawing tools group box (probably change to colour palette changing tools)
         self.drawBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -94,6 +99,7 @@ class Ui_MainWindow(object):
         # Save image option attached to saveAsImage function
         self.actionSave_As = QtWidgets.QAction(MainWindow)
         self.actionSave_As.setObjectName("actionSave_As")
+        self.actionSave_As.triggered.connect(self.imageSave)
         self.menuFile.addAction(self.actionSave_As)
         # Save image option attached to saveImage function
         self.actionSave = QtWidgets.QAction(MainWindow)
@@ -102,6 +108,7 @@ class Ui_MainWindow(object):
         # Exit option attached to fileExit function
         self.actionExit = QtWidgets.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
+        self.actionExit.triggered.connect(self.fileExit)
         self.menuFile.addAction(self.actionExit)
 
         self.retranslateUi(MainWindow)
@@ -118,6 +125,7 @@ class Ui_MainWindow(object):
         self.boxBlur.setText(_translate("MainWindow", "Box Blur"))
         self.kernelFilt.setText(_translate("MainWindow", "Kernel Filter"))
         self.removeFilters.setText(_translate("MainWindow", "Remove Filters"))
+        # self.undoFilterButton.setText(_translate("MainWindow", "Undo Filter"))
         self.drawBox.setTitle(_translate("MainWindow", "Draw"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
@@ -140,6 +148,15 @@ class Ui_MainWindow(object):
         else:
             pass
 
+    def imageSave(self):
+        pass
+        # name = QFileDialog.getSaveFileName(self, 'Save File')
+        # print(name)
+        # file = open(name, 'w')
+        # text = self.textEdit.toPlainText()
+        # file.write(text)
+        # file.close()
+
     def filterGaussian(self):
         image_object.gaussianFilter(5)
         image_object.filtered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
@@ -160,16 +177,16 @@ class Ui_MainWindow(object):
 
     def revertOriginal(self):
         image_object.filtered_img = None
+        image_object.effects = []
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def fileExit(self):
-        pass
+        sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
