@@ -27,19 +27,21 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(850, 630, 91, 21))
         self.label.setObjectName("label")
+        self.label.setText("Hello there!")
 
         # Image editing tools group box properties
         self.editBox = QtWidgets.QGroupBox(self.centralwidget)
         self.editBox.setGeometry(QtCore.QRect(10, 10, 111, 181))
         self.editBox.setObjectName("editBox")
         # Image editing tools (buttons)
+        # Crop image
         self.cropButton = QtWidgets.QPushButton(self.editBox)
         self.cropButton.setGeometry(QtCore.QRect(10, 20, 93, 28))
         self.cropButton.setObjectName("cropButton")
 
         # Image filter group box properties
         self.filterBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.filterBox.setGeometry(QtCore.QRect(10, 190, 111, 211))
+        self.filterBox.setGeometry(QtCore.QRect(10, 190, 111, 331))
         self.filterBox.setObjectName("filterBox")
         # Check boxes for filters (may change)
         # Gaussian filter
@@ -57,20 +59,27 @@ class Ui_MainWindow(object):
         self.kernelFilt.setGeometry(QtCore.QRect(10, 80, 93, 28))
         self.kernelFilt.setObjectName("kernelFilt")
         self.kernelFilt.clicked.connect(self.filterKernel)
+        # Image Negative
+        self.negative = QtWidgets.QPushButton(self.filterBox)
+        self.negative.setGeometry(QtCore.QRect(10, 110, 93, 28))
+        self.negative.setObjectName("negativeButton")
+        self.negative.clicked.connect(self.filterImageNegative)
+        # Grayscale
+        self.grayScale = QtWidgets.QPushButton(self.filterBox)
+        self.grayScale.setGeometry(QtCore.QRect(10, 140, 93, 28))
+        self.grayScale.setObjectName("grayscaleButton")
+        self.grayScale.clicked.connect(self.filterGrayScale)
         # Remove filters
         self.removeFilters = QtWidgets.QPushButton(self.filterBox)
-        self.removeFilters.setGeometry(QtCore.QRect(10, 110, 93, 28))
+        self.removeFilters.setGeometry(QtCore.QRect(10, 290, 93, 28))
         self.removeFilters.setObjectName("removeFilters")
         self.removeFilters.clicked.connect(self.revertOriginal)
         # Undo filter - UNUSED
-        # self.undoFilterButton = QtWidgets.QPushButton(self.filterBox)
-        # self.undoFilterButton.setGeometry(QtCore.QRect(10, 140, 93, 28))
-        # self.undoFilterButton.setObjectName("undoFilterButton")
-        # self.undoFilterButton.clicked.connect(self.undoFilter)
+        #
 
         # Drawing tools group box (probably change to colour palette changing tools)
         self.drawBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.drawBox.setGeometry(QtCore.QRect(10, 400, 111, 80))
+        self.drawBox.setGeometry(QtCore.QRect(10, 519, 111, 80))
         self.drawBox.setObjectName("drawBox")
 
         # Label Widget for image canvas
@@ -120,13 +129,14 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "RCM Image Editor"))
         self.editBox.setTitle(_translate("MainWindow", "Edit"))
         self.cropButton.setText(_translate("MainWindow", "Crop"))
+        self.grayScale.setText(_translate("MainWindow", "Grayscale"))
+        self.negative.setText(_translate("MainWindow", "Negative"))
         self.label.setText(_translate("MainWindow", "Position:"))
         self.filterBox.setTitle(_translate("MainWindow", "Filter"))
         self.gaussian.setText(_translate("MainWindow", "Gaussian Filter"))
         self.boxBlur.setText(_translate("MainWindow", "Box Blur"))
         self.kernelFilt.setText(_translate("MainWindow", "Kernel Filter"))
         self.removeFilters.setText(_translate("MainWindow", "Remove Filters"))
-        # self.undoFilterButton.setText(_translate("MainWindow", "Undo Filter"))
         self.drawBox.setTitle(_translate("MainWindow", "Draw"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
@@ -168,30 +178,41 @@ class Ui_MainWindow(object):
 
     def filterGaussian(self):
         image_object.gaussianFilter(5)
-        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/ALTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ALTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterBoxBlur(self):
         image_object.boxBlurFilter(5)
-        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/ALTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ALTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def filterKernel(self):
         image_object.kernelFilter(5)
-        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/FILTERED.jpg")
-        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/FILTERED.jpg")))
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/ALTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ALTERED.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def revertOriginal(self):
-        image_object.altered_img = None
-        image_object.effects = []
+        image_object.removeEffects()
         self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ORIGINAL.jpg")))
         self.imageCanvas.setScaledContents(True)
 
     def fileExit(self):
         sys.exit(app.exec_())
+
+    def filterGrayScale(self):
+        image_object.convertToGrayscale()
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/ALTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ALTERED.jpg")))
+        self.imageCanvas.setScaledContents(True)
+
+    def filterImageNegative(self):
+        image_object.imageNegative()
+        image_object.altered_img.save(os.path.dirname(__file__) + "/temp/ALTERED.jpg")
+        self.imageCanvas.setPixmap(QtGui.QPixmap().fromImage(QImage(os.path.dirname(__file__) + "/temp/ALTERED.jpg")))
+        self.imageCanvas.setScaledContents(True)
 
 
 if __name__ == "__main__":

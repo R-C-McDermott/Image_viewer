@@ -4,9 +4,7 @@ Image class
 '''
 import numpy as np
 
-from PIL import Image
-from PIL import ImageFilter
-from PyQt5.QtGui import QImage
+from PIL import Image, ImageOps, ImageFilter
 
 import matplotlib.pyplot as plt
 
@@ -15,7 +13,6 @@ class ImageClass:
     def __init__(self, img_dir):
         self.img_directory = img_dir
         self.img_read = Image.open(img_dir)
-        # self.img = QImage(img_dir)
         self.img_arr = np.array(self.img_read)
         self.img_X_dim = self.img_arr.shape[1]
         self.img_Y_dim = self.img_arr.shape[0]
@@ -121,10 +118,16 @@ class ImageClass:
 # COLOUR CONVERTION FUNCTIONS
 
     def convertToGrayscale(self):
-        if self.altered_img == None:
-            self.altered_img = self.img_read.convert("LA")
+        if self.altered_img is None:
+            self.altered_img = self.img_read.convert("L")
         else:
-            self.altered_img = self.altered_img.convert("LA")
+            self.altered_img = self.altered_img.convert("L")
+
+    def imageNegative(self):
+        if self.altered_img is None:
+            self.altered_img = ImageOps.invert(self.img_read)
+        else:
+            self.altered_img = ImageOps.invert(self.altered_img)
 
 
 
