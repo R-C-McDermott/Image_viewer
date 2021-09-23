@@ -17,10 +17,19 @@ class ImageClass:
         self.img_X_dim = self.img_arr.shape[1]
         self.img_Y_dim = self.img_arr.shape[0]
         self.altered_img = None
+        self.altered_img_arr = None
+        self.altered_img_X_dim = None
+        self.altered_img_Y_dim = None
         self.cropped_img = None
         self.effects = []
 
 # BASIC IMAGE CLASS OPERATIONS
+
+    def getMaximumImageDimension(self):
+        if self.img_X_dim > self.img_Y_dim:
+            return self.img_X_dim
+        else:
+            return self.img_Y_dim
 
     def displayOriginalImagePopUp(self):
         plt.imshow(self.img_read)
@@ -54,7 +63,23 @@ class ImageClass:
     def croppedArray(self, left, right, top, bottom):
         self.cropped_img = self.img_arr[top:bottom, left:right]
 
+    def rotateClockwise(self):
+        if self.altered_img is None:
+            self.altered_img = self.img_read.rotate(-90, expand=True)
+        else:
+            self.altered_img = self.altered_img.rotate(-90, expand=True)
+        self.altered_img_arr = np.array(self.altered_img)
+        self.altered_img_X_dim = self.altered_img_arr.shape[1]
+        self.altered_img_Y_dim = self.altered_img_arr.shape[0]
 
+    def rotateAntiClockwise(self):
+        if self.altered_img is None:
+            self.altered_img = self.img_read.rotate(90, expand=True)
+        else:
+            self.altered_img = self.altered_img.rotate(90, expand=True)
+        self.altered_img_arr = np.array(self.altered_img)
+        self.altered_img_X_dim = self.altered_img_arr.shape[1]
+        self.altered_img_Y_dim = self.altered_img_arr.shape[0]
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
